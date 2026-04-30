@@ -168,11 +168,18 @@ app.post('/api/links', createLimiter, async (req, res) => {
       return res.status(400).json({ error: 'URL tujuan harus valid (mulai http:// atau https://).' });
     }
 
-    const { data, error } = await supabase
-      .from('links')
-      .insert([{ slug: cleanSlug, destination: String(destination).trim() }])
-      .select()
-      .single();
+    const { error } = await supabase
+  .from('links')
+  .insert([{ slug: cleanSlug, destination: String(destination).trim() }]);
+
+if (error) {
+  if (error.code === '23505') {
+    return res.status(409).json({ error: 'Slug sudah dipakai, coba yang lain.' });
+  }
+  throw error;
+}
+
+return res.status(201).json({ success: true });
 
     if (error) {
       if (error.code === '23505') {
