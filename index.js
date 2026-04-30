@@ -149,7 +149,7 @@ app.get('/api/stats', requireAdmin, async (_req, res) => {
   }
 });
 
-app.post('/api/links', requireAdmin, createLimiter, async (req, res) => {
+app.post('/api/links', createLimiter, async (req, res) => {
   try {
     const { slug, destination } = req.body || {};
     const cleanSlug = normalizeSlug(slug);
