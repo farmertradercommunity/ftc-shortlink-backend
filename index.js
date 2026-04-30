@@ -18,10 +18,20 @@ if (!supabaseUrl || !supabaseKey || !adminSecretEnv) {
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 app.set('trust proxy', true);
-app.use(express.json({ limit: '1mb' }));
-app.use(cors({
-  origin: '*'
-}));
+app.use(express.json());
+
+// FIX CORS (WAJIB)
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET,POST,PATCH,DELETE,OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, x-admin-secret');
+
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+
+  next();
+});
 app.options('*', cors());
 
 const createLimiter = rateLimit({
