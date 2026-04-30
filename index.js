@@ -20,9 +20,7 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 app.set('trust proxy', true);
 app.use(express.json({ limit: '1mb' }));
 app.use(cors({
-  origin: true,
-  methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'x-admin-secret']
+  origin: '*'
 }));
 app.options('*', cors());
 
